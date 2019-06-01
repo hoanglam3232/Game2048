@@ -11,6 +11,9 @@ package java2048;
  */
 import java.awt.*;
 import javax.swing.*;
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class GUI{
     int frameHeight = 394;
@@ -19,12 +22,14 @@ public class GUI{
     int marginSize  =   16;
     Color backgroundColor = new Color(255, 225, 120);//light golden yellow color
     
-    
+    Map numberTiles;
     JFrame frame;
     
     public GUI(){
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        loadNumberTiles();
 
         GameBoard gb = new GameBoard();
 
@@ -63,15 +68,67 @@ public class GUI{
          frame.getContentPane().setPreferredSize(new Dimension(frameWidth, frameHeight));
          frame.pack();
          frame.setVisible(true);
+         
+         private void loadNumberTiles() {
+             numberTiles = new Hashtable();
+             ClassLoader cldr = this.getClass().getClassLoader();
+             URL url0000 = cldr.getResource("images/");
+             URL url0002 = cldr.getResource("images/");
+             URL url0004 = cldr.getResource("images/");
+             URL url0008 = cldr.getResource("images/");
+             URL url0016 = cldr.getResource("images/");
+             URL url0032 = cldr.getResource("images/");
+             URL url0064 = cldr.getResource("images/");
+             URL url0128 = cldr.getResource("images/");
+             URL url0256 = cldr.getResource("images/");
+             URL url0512 = cldr.getResource("images/");
+             URL url1024 = cldr.getResource("images/");
+             URL url2048 = cldr.getResource("images/");
+             
+             numberTiles.put(0, new ImageIcon(url0000));            
+             numberTiles.put(2, new ImageIcon(url0002));
+             numberTiles.put(4, new ImageIcon(url0004));
+             numberTiles.put(8, new ImageIcon(url0008));
+             numberTiles.put(16, new ImageIcon(url0016));
+             numberTiles.put(32, new ImageIcon(url0032));
+             numberTiles.put(64, new ImageIcon(url0064));
+             numberTiles.put(128, new ImageIcon(url0128));
+             numberTiles.put(256, new ImageIcon(url0256));
+             numberTiles.put(512, new ImageIcon(url0512));
+             numberTiles.put(1024, new ImageIcon(url1024));
+             numberTiles.put(2048, new ImageIcon(url2048));
+             
+         }
 
          
     }
+
+    
 
     class GameBoard extends JPanel{
         @Override
         protected void paintComponent(Graphics g){
             g.setColor(new Color(20, 20, 20));
             g.fillRect(0, 0, this.getWidth(), this.getHeight());
+            int[][] test = {
+                {0, 1, 2, 4},
+                {8, 16, 32, 64},
+                {128, 256, 512, 1024},
+                {0, 0, 0, 0}
+            };
+            for (int y = 1; y < 5; y++){
+                for (int x =1; x < 5; x++){
+                    int X = (8 * x) + (64 * (x - 1));
+                    int Y = (8 * y) + (64 * (y - 1));
+
+                    int thisNumber = test[y-1][x-1];
+
+                    if (numberTiles.containsKey(thisNumber)){
+                        ImageIcon thisTile = (ImageIcon) numberTiles.get(thisNumber);
+                        thisTile.paintIcon(this, g, X, Y);
+                    }
+                }
+            }
         }
     }
 }
